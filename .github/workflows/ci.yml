@@ -3,11 +3,14 @@ name: CI
 on:
   push:
     branches: [main]
+    tags: ["v*"]
   pull_request:
 
 jobs:
   build-and-validate:
     runs-on: macos-26
+    permissions:
+      contents: read
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -42,3 +45,28 @@ jobs:
             dist/QuickKey-macOS.zip
             dist/QuickKey-macOS.dmg
           if-no-files-found: error
+
+  publish-release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build-and-validate
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download release artifacts
+        uses: actions/download-artifact@v6
+        with:
+          name: QuickKey-macOS
+          path: dist
+
+      - name: Publish ZIP and DMG
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+            dist/QuickKey-macOS.zip \
+            dist/QuickKey-macOS.dmg \
+            --repo "$GITHUB_REPOSITORY" \
+            --verify-tag \
+            --title "QuickKey ${GITHUB_REF_NAME#v}" \
+            --generate-notes
