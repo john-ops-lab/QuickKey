@@ -9,6 +9,7 @@ extension KeyboardShortcuts.Name {
     )
 }
 
+@MainActor
 final class HotKeySettings: ObservableObject {
     static let shared = HotKeySettings()
 
@@ -65,6 +66,7 @@ extension Notification.Name {
     static let quickKeyHotKeyChanged = Notification.Name("QuickKey.hotKeyChanged")
 }
 
+@MainActor
 final class HotKeyManager {
     private var registered = false
 
