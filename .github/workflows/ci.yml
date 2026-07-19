@@ -31,6 +31,8 @@ jobs:
           codesign --verify --deep --strict dist/QuickKey.app
           hdiutil verify dist/QuickKey-macOS.dmg
           test -f dist/QuickKey-macOS.zip
+          test -d dist/QuickKey.app/KeyboardShortcuts_KeyboardShortcuts.bundle
+          test -f dist/QuickKey.app/KeyboardShortcuts_KeyboardShortcuts.bundle/zh-hans.lproj/Localizable.strings
 
       - name: Validate shortcut library
         run: |

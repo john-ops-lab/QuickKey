@@ -3,8 +3,8 @@ set -euo pipefail
 
 PROJECT_DIR="${0:A:h:h}"
 APP_NAME="QuickKey"
-APP_VERSION="${QUICKKEY_VERSION:-1.0.1}"
-BUNDLE_VERSION="${QUICKKEY_BUILD_NUMBER:-2}"
+APP_VERSION="${QUICKKEY_VERSION:-1.0.2}"
+BUNDLE_VERSION="${QUICKKEY_BUILD_NUMBER:-3}"
 SCRATCH_DIR="${QUICKKEY_BUILD_DIR:-$PROJECT_DIR/.build}"
 APP_DIR="$PROJECT_DIR/dist/$APP_NAME.app"
 ICON_SOURCE="$PROJECT_DIR/Assets/AppIcon.png"
@@ -18,7 +18,9 @@ rm -rf "$APP_DIR"
 mkdir -p "$APP_DIR/Contents/MacOS" "$APP_DIR/Contents/Resources"
 cp "$BUILD_DIR/$APP_NAME" "$APP_DIR/Contents/MacOS/$APP_NAME"
 for resource_bundle in "$BUILD_DIR"/*.bundle(N); do
-    ditto "$resource_bundle" "$APP_DIR/Contents/Resources/${resource_bundle:t}"
+    # SwiftPM's generated bundle accessor resolves executable resources from
+    # Bundle.main.bundleURL, which is the .app root for a manually assembled app.
+    ditto "$resource_bundle" "$APP_DIR/${resource_bundle:t}"
 done
 cp "$SCRATCH_DIR/checkouts/KeyboardShortcuts/license" \
     "$APP_DIR/Contents/Resources/KeyboardShortcuts-LICENSE.txt"
