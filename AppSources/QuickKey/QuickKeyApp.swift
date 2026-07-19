@@ -2,6 +2,7 @@ import AppKit
 import SwiftUI
 
 @main
+@MainActor
 enum QuickKeyMain {
     static func main() {
         let application = NSApplication.shared
@@ -13,6 +14,7 @@ enum QuickKeyMain {
     }
 }
 
+@MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate {
     private var window: NSWindow?
     private let hotKeyManager = HotKeyManager()
