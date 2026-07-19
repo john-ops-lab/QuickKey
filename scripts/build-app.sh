@@ -11,6 +11,30 @@ ICON_SOURCE="$PROJECT_DIR/Assets/AppIcon.png"
 ICONSET_DIR="$SCRATCH_DIR/AppIcon.iconset"
 
 cd "$PROJECT_DIR"
+swift package --scratch-path "$SCRATCH_DIR" resolve
+
+# `swift build` generates a command-line style resource accessor for package
+# dependencies. Inside a macOS .app that accessor looks beside Contents instead
+# of in Contents/Resources, which is the only code-signable resource location.
+DEPENDENCY_UTILITIES="$SCRATCH_DIR/checkouts/KeyboardShortcuts/Sources/KeyboardShortcuts/Utilities.swift"
+python3 - "$DEPENDENCY_UTILITIES" <<'PY'
+from pathlib import Path
+import sys
+
+path = Path(sys.argv[1])
+source = path.read_text()
+old = "\t\tNSLocalizedString(self, bundle: .module, comment: self)"
+new = """\t\tlet resourceBundleURL = Bundle.main.resourceURL?
+\t\t\t.appendingPathComponent(\"KeyboardShortcuts_KeyboardShortcuts.bundle\")
+\t\tlet resourceBundle = resourceBundleURL.flatMap(Bundle.init(url:)) ?? .main
+\t\treturn NSLocalizedString(self, bundle: resourceBundle, comment: self)"""
+
+if old in source:
+    path.write_text(source.replace(old, new, 1))
+elif new not in source:
+    raise SystemExit("KeyboardShortcuts resource accessor no longer matches the expected source")
+PY
+
 swift build -c release --scratch-path "$SCRATCH_DIR"
 BUILD_DIR="$(swift build -c release --scratch-path "$SCRATCH_DIR" --show-bin-path)"
 
@@ -18,9 +42,7 @@ rm -rf "$APP_DIR"
 mkdir -p "$APP_DIR/Contents/MacOS" "$APP_DIR/Contents/Resources"
 cp "$BUILD_DIR/$APP_NAME" "$APP_DIR/Contents/MacOS/$APP_NAME"
 for resource_bundle in "$BUILD_DIR"/*.bundle(N); do
-    # SwiftPM's generated bundle accessor resolves executable resources from
-    # Bundle.main.bundleURL, which is the .app root for a manually assembled app.
-    ditto "$resource_bundle" "$APP_DIR/${resource_bundle:t}"
+    ditto "$resource_bundle" "$APP_DIR/Contents/Resources/${resource_bundle:t}"
 done
 cp "$SCRATCH_DIR/checkouts/KeyboardShortcuts/license" \
     "$APP_DIR/Contents/Resources/KeyboardShortcuts-LICENSE.txt"
