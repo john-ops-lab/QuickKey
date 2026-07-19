@@ -17,6 +17,7 @@ swift package --scratch-path "$SCRATCH_DIR" resolve
 # dependencies. Inside a macOS .app that accessor looks beside Contents instead
 # of in Contents/Resources, which is the only code-signable resource location.
 DEPENDENCY_UTILITIES="$SCRATCH_DIR/checkouts/KeyboardShortcuts/Sources/KeyboardShortcuts/Utilities.swift"
+chmod u+w "$DEPENDENCY_UTILITIES"
 python3 - "$DEPENDENCY_UTILITIES" <<'PY'
 from pathlib import Path
 import sys
