@@ -1,0 +1,24 @@
+# macOS
+.DS_Store
+
+# Swift Package Manager
+.build/
+.swiftpm/
+
+# Release artifacts
+dist/
+*.zip
+
+# Xcode
+DerivedData/
+*.xcuserstate
+xcuserdata/
+
+# Local project context (not part of QuickKey)
+AGENTS.md
+sources/
+
+# Local secrets and environment
+.env
+.env.*
+!.env.example
