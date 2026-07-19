@@ -18,8 +18,16 @@ jobs:
       - name: Resolve dependencies
         run: swift package resolve
 
-      - name: Build
-        run: swift build
+      - name: Build release artifacts
+        run: |
+          chmod +x scripts/build-app.sh scripts/build-dmg.sh scripts/build-release.sh
+          QUICKKEY_BUILD_DIR="$RUNNER_TEMP/quickkey-build" ./scripts/build-release.sh
+
+      - name: Verify release artifacts
+        run: |
+          codesign --verify --deep --strict dist/QuickKey.app
+          hdiutil verify dist/QuickKey-macOS.dmg
+          test -f dist/QuickKey-macOS.zip
 
       - name: Validate shortcut library
         run: |

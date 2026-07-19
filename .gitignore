@@ -8,6 +8,7 @@
 # Release artifacts
 dist/
 *.zip
+*.dmg
 
 # Xcode
 DerivedData/
