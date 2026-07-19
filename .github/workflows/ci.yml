@@ -7,10 +7,10 @@ on:
 
 jobs:
   build-and-validate:
-    runs-on: macos-15
+    runs-on: macos-26
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Show Swift version
         run: swift --version
@@ -33,3 +33,12 @@ jobs:
         run: |
           chmod +x scripts/validate.sh
           ./scripts/validate.sh
+
+      - name: Upload release artifacts
+        uses: actions/upload-artifact@v6
+        with:
+          name: QuickKey-macOS
+          path: |
+            dist/QuickKey-macOS.zip
+            dist/QuickKey-macOS.dmg
+          if-no-files-found: error

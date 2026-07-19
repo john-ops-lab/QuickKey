@@ -5,7 +5,7 @@ import KeyboardShortcuts
 extension KeyboardShortcuts.Name {
     static let quickKeyLauncher = Self(
         "quickKeyLauncher",
-        default: .init(.k, modifiers: [.control, .shift])
+        initial: .init(.k, modifiers: [.control, .shift])
     )
 }
 

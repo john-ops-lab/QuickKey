@@ -8,7 +8,7 @@ let package = Package(
         .executable(name: "QuickKey", targets: ["QuickKey"])
     ],
     dependencies: [
-        .package(url: "https://github.com/sindresorhus/KeyboardShortcuts.git", exact: "1.15.0")
+        .package(url: "https://github.com/sindresorhus/KeyboardShortcuts.git", exact: "3.0.1")
     ],
     targets: [
         .executableTarget(

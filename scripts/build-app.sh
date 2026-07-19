@@ -3,6 +3,8 @@ set -euo pipefail
 
 PROJECT_DIR="${0:A:h:h}"
 APP_NAME="QuickKey"
+APP_VERSION="${QUICKKEY_VERSION:-1.0.1}"
+BUNDLE_VERSION="${QUICKKEY_BUILD_NUMBER:-2}"
 SCRATCH_DIR="${QUICKKEY_BUILD_DIR:-$PROJECT_DIR/.build}"
 APP_DIR="$PROJECT_DIR/dist/$APP_NAME.app"
 ICON_SOURCE="$PROJECT_DIR/Assets/AppIcon.png"
@@ -36,7 +38,7 @@ sips -z 512 512 "$ICON_SOURCE" --out "$ICONSET_DIR/icon_512x512.png" >/dev/null
 sips -z 1024 1024 "$ICON_SOURCE" --out "$ICONSET_DIR/icon_512x512@2x.png" >/dev/null
 iconutil -c icns "$ICONSET_DIR" -o "$APP_DIR/Contents/Resources/AppIcon.icns"
 
-cat > "$APP_DIR/Contents/Info.plist" <<'PLIST'
+cat > "$APP_DIR/Contents/Info.plist" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -49,8 +51,8 @@ cat > "$APP_DIR/Contents/Info.plist" <<'PLIST'
     <key>CFBundleDisplayName</key><string>QuickKey</string>
     <key>CFBundleIconFile</key><string>AppIcon</string>
     <key>CFBundlePackageType</key><string>APPL</string>
-    <key>CFBundleShortVersionString</key><string>1.0</string>
-    <key>CFBundleVersion</key><string>1</string>
+    <key>CFBundleShortVersionString</key><string>$APP_VERSION</string>
+    <key>CFBundleVersion</key><string>$BUNDLE_VERSION</string>
     <key>LSMinimumSystemVersion</key><string>13.0</string>
     <key>NSHighResolutionCapable</key><true/>
 </dict>

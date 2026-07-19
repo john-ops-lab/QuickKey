@@ -366,7 +366,11 @@ private struct HotKeySettingsView: View {
                     KeyboardShortcuts.Recorder(
                         "快速呼出",
                         name: .quickKeyLauncher,
-                        onChange: { hotKeySettings.update($0) }
+                        onChange: { shortcut in
+                            DispatchQueue.main.async {
+                                hotKeySettings.update(shortcut)
+                            }
+                        }
                     )
                     Spacer()
                     Label("冲突组合键不会保存", systemImage: "checkmark.shield.fill")
